@@ -1,0 +1,86 @@
+{
+  "name": "ms_ai",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "staging": "nodemon ./src/index.js",
+    "eslint:check": "eslint 'src/**/*.{js,jsx}' --fix",
+    "format": "prettier \"./src/**/*.js\" --write",
+    "start": "node src/index.js",
+    "console:staging": "nodemon --experimental-repl-await ./src/console.js",
+    "console:prod": "node --experimental-repl-await ./src/console.js",
+    "prepare": "husky install"
+  },
+  "author": "",
+  "license": "ISC",
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true",
+      "pre-commit": "lint-staged && madge --circular ./",
+      "pre-push": "lint-staged && madge --circular ./"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "yarn format",
+      "eslint --fix",
+      "git add ."
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "dependencies": {
+    "@sendgrid/mail": "^7.2.2",
+    "@sentry/node": "^6.2.1",
+    "@sentry/tracing": "^6.2.5",
+    "aws-sdk": "^2.860.0",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "coralogix-logger": "^1.1.28",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-rate-limit": "^5.2.6",
+    "helmet": "^4.6.0",
+    "js-logger": "^1.6.1",
+    "mongoose": "^5.12.14",
+    "node-cron": "^3.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.13.10",
+    "@babel/preset-env": "^7.13.10",
+    "@commitlint/cli": "^12.1.4",
+    "@commitlint/config-conventional": "^12.1.4",
+    "@types/cors": "2.8.6",
+    "@types/express": "4.17.2",
+    "@types/jwt-simple": "0.5.33",
+    "@types/lodash": "4.14.149",
+    "@types/mongoose": "5.5.32",
+    "@types/throng": "5.0.0",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^26.6.3",
+    "commitizen": "^4.2.3",
+    "cz-conventional-changelog": "3.3.0",
+    "eslint": "7.9.0",
+    "eslint-config-airbnb-base": "14.2.0",
+    "eslint-config-prettier": "6.4.0",
+    "eslint-plugin-import": "2.22.0",
+    "eslint-plugin-jest": "22.6.4",
+    "eslint-plugin-node": "9.1.0",
+    "eslint-plugin-prettier": "3.1.1",
+    "eslint-plugin-promise": "4.1.1",
+    "eslint-plugin-standard": "4.0.0",
+    "factory-girl": "5.0.4",
+    "husky": "^6.0.0",
+    "lint": "^0.7.0",
+    "lint-staged": "10.4.0",
+    "prettier": "^2.2.1",
+    "pretty-quick": "3.1.0",
+    "supertest": "4.0.2"
+  }
+}
