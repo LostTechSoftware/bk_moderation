@@ -1,6 +1,9 @@
 const AWS = require("aws-sdk");
 const cron = require("node-cron");
 const { sendLogInfo, sendLogError } = require("../logs/coralogix");
+const {
+  RecognizeStories,
+} = require("../services/SqsServices/RecognizeStories");
 
 AWS.config.update({ region: "us-east-2" });
 const sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
@@ -14,8 +17,8 @@ const params = {
   WaitTimeSeconds: 0,
 };
 
-cron.schedule("* * * * *", () => {
-  sqs.receiveMessage(params, (err, message) => {
+cron.schedule("*/10 * * * * *", async () => {
+  sqs.receiveMessage(params, async (err, message) => {
     if (err) {
       console.log(err, err.stack);
       sendLogError({ data: `Queue error ${err}`, name: "ERROR" });
@@ -25,8 +28,20 @@ cron.schedule("* * * * *", () => {
         console.log("Nothing to process");
         return;
       }
-      const orderData = message.Messages[0].Body;
+      const orderData =
+        /^[\],:{}\s]*$/.test(
+          message.Messages[0].Body.replace(/\\["\\\/bfnrtu]/g, "@")
+            .replace(
+              /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,
+              "]"
+            )
+            .replace(/(?:^|:|,)(?:\s*\[)+/g, "")
+        ) && JSON.parse(message.Messages[0].Body);
       sendLogInfo({ data: orderData, name: "INFO" });
+
+      if (orderData.event === "RecognizeStories") {
+        await RecognizeStories(orderData.data);
+      }
 
       const deleteParams = {
         QueueUrl: queueUrl,

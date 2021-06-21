@@ -1,7 +1,7 @@
-const aws = require('aws-sdk')
-const mongoose = require('../database')
+const aws = require("aws-sdk");
+const mongoose = require("../database");
 
-const s3 = new aws.S3()
+const s3 = new aws.S3();
 
 const StorySchema = new mongoose.Schema({
   createdAt: {
@@ -12,29 +12,33 @@ const StorySchema = new mongoose.Schema({
   imageKey: String,
   restaurant: {
     type: mongoose.Schema.ObjectId,
-    ref: 'Restaurant',
+    ref: "Restaurant",
   },
   type: {
     type: String,
-    default: 'image',
+    default: "image",
   },
   finish: {
     type: Number,
     default: 0,
   },
-})
+  approved: {
+    type: Boolean,
+    default: false,
+  },
+});
 
-const Story = mongoose.model('Story', StorySchema)
+const Story = mongoose.model("Story", StorySchema);
 
-StorySchema.pre('remove', function () {
+StorySchema.pre("remove", function () {
   if (this.image) {
     return s3
       .deleteObject({
         bucket: process.env.AWS_BUCKET,
         Key: this.imageKey,
       })
-      .promise()
+      .promise();
   }
-})
+});
 
-module.exports = Story
+module.exports = Story;
