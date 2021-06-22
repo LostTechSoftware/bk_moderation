@@ -1,27 +1,65 @@
-const Algorithmia = require("algorithmia");
 const sgMail = require("@sendgrid/mail");
+const AWS = require("aws-sdk");
 const Story = require("../../../models/story");
+const { sendLogError, sendLogInfo } = require("../../../logs/coralogix");
+
+AWS.config.update({ region: "us-east-2" });
+const rekognition = new AWS.Rekognition({ apiVersion: "2016-06-27" });
+
 sgMail.setApiKey(process.env.SENDGRID_KEY);
+
+const reasonsTranslated = {
+  "Explicit Nudity": "Nudez Explicita, ",
+  Nudity: "Nudez, ",
+  Suggestive: "Conteudo sugestivo, ",
+  "Revealing Clothes": "Roupas inadequeadas, ",
+  "Nazi Party": "Simbolos extremistas, ",
+  "Hate Symbols": "Simbolos extremistas, ",
+  Gambling: "Jogos de azar, ",
+  Smoking: "Tabaco ou fumo, ",
+  Tobacco: "Tabaco ou fumo, ",
+  "Middle Finger": "Gestos Rudes, ",
+  "Rude Gestures": "Gestos Rudes, ",
+  "Graphic Violence Or Gore": "Sangue ou violencia, ",
+  Violence: "Violencia, ",
+};
 
 async function RecognizeStories(datas) {
   console.log("called");
   console.log(datas);
-  for (const data of datas) {
-    Algorithmia.client("simvJSYjheHpgasp7CePA4kWU3x1")
-      .algo("sfw/NudityDetectioni2v/0.2.13?timeout=300") // timeout is optional
-      .pipe(data.image)
-      .then(async (response) => {
-        if (response.get().nude === "true") {
-          console.log("contem nudez");
 
+  for (const dataQeue of datas) {
+    const params = {
+      Image: {
+        S3Object: {
+          Bucket: process.env.AWS_BUCKET,
+          Name: dataQeue.imageKey,
+        },
+      },
+    };
+
+    rekognition.detectModerationLabels(params, async function (err, data) {
+      if (err) {
+        sendLogError({ data: err, name: "QUEUE_STORY_ERRR" });
+        return console.log({ data: err, name: "QUEUE_STORY_ERRR" });
+      }
+      console.log({ data, name: "SUCCESSFULL_STORY_ANALISIED" });
+      sendLogInfo({ data, name: "SUCCESSFULL_STORY_ANALISIED" });
+
+      try {
+        const reasons = [];
+        if (data.ModerationLabels.length) {
+          for (const { Name } of data.ModerationLabels) {
+            reasons.push(reasonsTranslated[Name]);
+          }
           const msg = {
-            to: data.email,
+            to: dataQeue.email,
             from: process.env.EMAIL,
             subject: `FoodZilla Seu Story foi Rejeitado`,
             text: "FoodZilla",
             html: `
-              <p>Story contem nudez ${data.image}</p>
-            `,
+      <p>Story contem ${reasons.map((reason) => reason)} ${dataQeue.image}</p>
+    `,
           };
           sgMail
             .send(msg)
@@ -31,43 +69,52 @@ async function RecognizeStories(datas) {
                 console.error(error);
 
                 if (error.response) {
-                  console.error(error.response.body);
+                  console.error(`Error in send email${error.response.body}`);
                 }
               }
             )
-            .catch((error) => console.log(error));
-        } else {
-          console.log("não contem nudez");
-          const msg = {
-            to: data.email,
-            from: process.env.EMAIL,
-            subject: `FoodZilla Seu Story foi Aprovado`,
-            text: "FoodZilla",
-            html: `
-              <p>Story aprovado ${data.image}</p>
-            `,
-          };
-          sgMail
-            .send(msg)
-            .then(
-              () => {},
-              (error) => {
-                console.error(error);
-
-                if (error.response) {
-                  console.error(error.response.body);
-                }
-              }
-            )
-            .catch((error) => console.log(error));
-
-          const story = await Story.findById(data.storyId);
-
-          story.approved = true;
-
-          await story.save();
+            .catch((error) =>
+              console.error(`Error in send email${error.response.body}`)
+            );
         }
-      });
+
+        const msg = {
+          to: dataQeue.email,
+          from: process.env.EMAIL,
+          subject: `FoodZilla Seu Story foi Aprovado`,
+          text: "FoodZilla",
+          html: `
+      <p>Story aprovado ${dataQeue.image}</p>
+    `,
+        };
+        sgMail
+          .send(msg)
+          .then(
+            () => {},
+            (error) => {
+              console.error(error);
+
+              if (error.response) {
+                console.error(`Error in send email${error.response.body}`);
+              }
+            }
+          )
+          .catch((error) =>
+            console.error(`Error in send email${error.response.body}`)
+          );
+
+        const story = await Story.findById(dataQeue.storyId);
+
+        if (!story) return;
+
+        story.approved = true;
+
+        await story.save();
+      } catch (error) {
+        sendLogError({ data: error, name: "QUEUE_STORY_ERRR" });
+        return console.log({ data: error, name: "QUEUE_STORY_ERRR" });
+      }
+    });
   }
 }
 
