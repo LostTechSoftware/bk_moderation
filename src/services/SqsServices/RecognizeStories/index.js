@@ -9,25 +9,21 @@ const rekognition = new AWS.Rekognition({ apiVersion: "2016-06-27" });
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
 const reasonsTranslated = {
-  "Explicit Nudity": "Nudez Explicita, ",
-  Nudity: "Nudez, ",
-  Suggestive: "Conteudo sugestivo, ",
-  "Revealing Clothes": "Roupas inadequeadas, ",
-  "Nazi Party": "Simbolos extremistas, ",
-  "Hate Symbols": "Simbolos extremistas, ",
-  Gambling: "Jogos de azar, ",
-  Smoking: "Tabaco ou fumo, ",
-  Tobacco: "Tabaco ou fumo, ",
-  "Middle Finger": "Gestos Rudes, ",
-  "Rude Gestures": "Gestos Rudes, ",
-  "Graphic Violence Or Gore": "Sangue ou violencia, ",
-  Violence: "Violencia, ",
+  "Explicit Nudity": "Nudez Explicita",
+  Nudity: "Nudez",
+  Suggestive: "Conteudo sugestivo",
+  "Revealing Clothes": "Roupas inadequeadas",
+  "Nazi Party": "Simbolos extremistas",
+  "Hate Symbols": "Simbolos extremistas",
+  Gambling: "Jogos de azar",
+  Smoking: "Tabaco ou fumo",
+  Tobacco: "Tabaco ou fumo",
+  "Rude Gestures": "Gestos Rudes",
+  "Graphic Violence Or Gore": "Sangue ou violencia",
+  Violence: "Violencia",
 };
 
 async function RecognizeStories(datas) {
-  console.log("called");
-  console.log(datas);
-
   for (const dataQeue of datas) {
     const params = {
       Image: {
@@ -57,22 +53,10 @@ async function RecognizeStories(datas) {
             from: process.env.EMAIL,
             subject: `FoodZilla Seu Story foi Rejeitado`,
             text: "FoodZilla",
-            html: `
-      <p>Story contem ${reasons.map((reason) => reason)} ${dataQeue.image}</p>
-    `,
+            html: ``,
           };
           sgMail
             .send(msg)
-            .then(
-              () => {},
-              (error) => {
-                console.error(error);
-
-                if (error.response) {
-                  console.error(`Error in send email${error.response.body}`);
-                }
-              }
-            )
             .catch((error) =>
               console.error(`Error in send email${error.response.body}`)
             );
@@ -83,22 +67,10 @@ async function RecognizeStories(datas) {
           from: process.env.EMAIL,
           subject: `FoodZilla Seu Story foi Aprovado`,
           text: "FoodZilla",
-          html: `
-      <p>Story aprovado ${dataQeue.image}</p>
-    `,
+          html: ``,
         };
         sgMail
           .send(msg)
-          .then(
-            () => {},
-            (error) => {
-              console.error(error);
-
-              if (error.response) {
-                console.error(`Error in send email${error.response.body}`);
-              }
-            }
-          )
           .catch((error) =>
             console.error(`Error in send email${error.response.body}`)
           );
