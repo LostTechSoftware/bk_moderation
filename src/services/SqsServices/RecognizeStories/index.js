@@ -2,6 +2,7 @@ const sgMail = require("@sendgrid/mail");
 const AWS = require("aws-sdk");
 const Story = require("../../../models/story");
 const { sendLogError, sendLogInfo } = require("../../../logs/coralogix");
+const { RejectStory, ApproveStory } = require("../../../templates");
 
 AWS.config.update({ region: "us-east-2" });
 const rekognition = new AWS.Rekognition({ apiVersion: "2016-06-27" });
@@ -46,42 +47,45 @@ async function RecognizeStories(datas) {
         const reasons = [];
         if (data.ModerationLabels.length) {
           for (const { Name } of data.ModerationLabels) {
-            reasons.push(reasonsTranslated[Name]);
+            reasons.push(
+              reasonsTranslated[Name] ? reasonsTranslated[Name] : null
+            );
           }
+
           const msg = {
             to: dataQeue.email,
             from: process.env.EMAIL,
             subject: `FoodZilla Seu Story foi Rejeitado`,
             text: "FoodZilla",
-            html: ``,
+            html: RejectStory({ image: dataQeue.image, reasons }),
           };
           sgMail
             .send(msg)
             .catch((error) =>
               console.error(`Error in send email${error.response.body}`)
             );
+        } else {
+          const msg = {
+            to: dataQeue.email,
+            from: process.env.EMAIL,
+            subject: `FoodZilla Seu Story foi Aprovado`,
+            text: "FoodZilla",
+            html: ApproveStory({ image: dataQeue.image }),
+          };
+          sgMail
+            .send(msg)
+            .catch((error) =>
+              console.error(`Error in send email${error.response.body}`)
+            );
+
+          const story = await Story.findById(dataQeue.storyId);
+
+          if (!story) return;
+
+          story.approved = true;
+
+          await story.save();
         }
-
-        const msg = {
-          to: dataQeue.email,
-          from: process.env.EMAIL,
-          subject: `FoodZilla Seu Story foi Aprovado`,
-          text: "FoodZilla",
-          html: ``,
-        };
-        sgMail
-          .send(msg)
-          .catch((error) =>
-            console.error(`Error in send email${error.response.body}`)
-          );
-
-        const story = await Story.findById(dataQeue.storyId);
-
-        if (!story) return;
-
-        story.approved = true;
-
-        await story.save();
       } catch (error) {
         sendLogError({ data: error, name: "QUEUE_STORY_ERRR" });
         return console.log({ data: error, name: "QUEUE_STORY_ERRR" });
