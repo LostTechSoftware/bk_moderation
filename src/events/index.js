@@ -8,7 +8,7 @@ const {
 AWS.config.update({ region: "us-east-2" });
 const sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
 
-const queueUrl = process.env.AWS_QUEUE_STAGING;
+const queueUrl = process.env.AWS_QUEUE;
 
 const params = {
   QueueUrl: queueUrl,

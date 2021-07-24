@@ -251,10 +251,13 @@ module.exports = ({ image, reasons }) => {
                                         height="100%" valign="top" bgcolor="" role="module-content">
                                         <div>
                                           <ul>
-                                          ${reasons.map((reason) => {
+                                          ${reasons.map((reason, index) => {
                                             return `<li style="text-align:inherit"><span style="white-space:pre-wrap">${
                                               reason
-                                                ? reason
+                                                ? `${reason}${
+                                                    index !==
+                                                      reasons.lenght - 1 && `, `
+                                                  }`
                                                 : "Conteúdo inadequeado"
                                             }</span></li>`;
                                           })}                                        

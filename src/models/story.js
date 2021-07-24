@@ -26,6 +26,9 @@ const StorySchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  city: String,
+  duration: Number,
+  status: { type: String, default: "waiting_review" },
 });
 
 const Story = mongoose.model("Story", StorySchema);
@@ -34,7 +37,7 @@ StorySchema.pre("remove", function () {
   if (this.image) {
     return s3
       .deleteObject({
-        bucket: process.env.AWS_BUCKET,
+        Bucket: process.env.AWS_BUCKET,
         Key: this.imageKey,
       })
       .promise();

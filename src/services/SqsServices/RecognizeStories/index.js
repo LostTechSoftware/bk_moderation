@@ -47,10 +47,16 @@ async function RecognizeStories(datas) {
         const reasons = [];
         if (data.ModerationLabels.length) {
           for (const { Name } of data.ModerationLabels) {
-            reasons.push(
-              reasonsTranslated[Name] ? reasonsTranslated[Name] : null
-            );
+            reasons.push(reasonsTranslated[Name] || "");
           }
+
+          const story = await Story.findById(dataQeue.storyId);
+
+          if (!story) return;
+
+          story.status = "rejected";
+
+          await story.save();
 
           const msg = {
             to: dataQeue.email,
@@ -83,6 +89,7 @@ async function RecognizeStories(datas) {
           if (!story) return;
 
           story.approved = true;
+          story.status = "approved";
 
           await story.save();
         }
