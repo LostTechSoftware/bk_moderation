@@ -24,8 +24,6 @@ cron.schedule("*/10 * * * * *", async () => {
       sendLogError({ data: `Queue error ${err}`, name: "ERROR" });
     } else {
       if (!message.Messages) {
-        sendLogInfo({ data: "Nothing to process", name: "INFO" });
-        console.log("Nothing to process");
         return;
       }
       const orderData =
