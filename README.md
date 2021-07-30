@@ -1,63 +1,25 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/icon.png" alt="Logo" width="80" height="80">
+  <a>
+    <img src="https://user-images.githubusercontent.com/37854189/127693722-90fe6ea7-60c9-40d5-9a53-9e5e5d971866.jpg">
   </a>
 
   <h3 align="center">FoodZilla MS Moderation</h3>
-
-  <p align="center">
-    Uma infraestrutura poderosa
-    <br />
-    <a href="https://www.notion.so/foodzillabr/Engineering-Wiki-c8f9d76fc8c5490dbdd321dcf9e05e3f"><strong>Veja a documentação »</strong></a>
-    <br />
-    <br />
-    <a href="https://backendfood.link">View Prod</a>
-    ·
-    <a href="https://staging-bk.foodzilla.com.br">View staging</a>
-    ·
-    <a href="https://helpcenter.foodzilla.com.br">Report Bug</a>
-  </p>
+  <br />
+  
 </p>
 
-<!-- TABLE OF CONTENTS -->
-<details open="open">
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgements">Acknowledgements</a></li>
-  </ol>
-</details>
 
 <!-- ABOUT THE PROJECT -->
 
-## About The Project
+### 🔔 About the project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+Inteligência usando AWS para reconhecer conteúdos impróprios, de uma forma que possamos controlar melhor os conteúdos na plataforma. Roda em background.
 
-Esse é o backend da plataforma que integra milhares de outras funcionalidades, sendo assim uma ferramenta poderosa e eficiente.
+### 🛠️ Built With
 
-### Built With
-
-Aqui vemos uma das mais poderosas ferramentas usadas pelo Backend
+Aqui vemos uma das mais poderosas ferramentas usadas pelo Backend Moderation
 
 - [Nodejs](https://nodejs.dev)
 - [Express](https://expressjs.com)
@@ -67,11 +29,11 @@ Aqui vemos uma das mais poderosas ferramentas usadas pelo Backend
 
 <!-- GETTING STARTED -->
 
-## Getting Started
+## 🚀 Getting Started
 
 Para iniciar o projeto é necessário seguir os passos abaixo:
 
-### Prerequisites
+### 📋 Pre-requisites
 
 É preciso ter heroku-cli e yarn
 
@@ -87,7 +49,7 @@ Para iniciar o projeto é necessário seguir os passos abaixo:
   npm install -g heroku
   ```
 
-### Installation
+### 🔧 Installation
 
 1. Clone the repo
    ```sh
@@ -101,24 +63,29 @@ Para iniciar o projeto é necessário seguir os passos abaixo:
    ```JS
    heroku config -a foodzilla-staging-server -s >> .env
    ```
+   
+### ✔ Run
+
+```bash
+yarn staging
+```   
 
 <!-- USAGE EXAMPLES -->
 
-## Usage
+## ⚙️ Usage
 
 Usado para toda a infraestrutura do FoodZilla.
 
-_For more examples, please refer to the [Documentation](https://www.notion.so/foodzillabr/Engineering-Wiki-c8f9d76fc8c5490dbdd321dcf9e05e3f)_
 
 <!-- ROADMAP -->
 
-## Roadmap
+## 🗺 Roadmap
 
-See the [PRs](https://github.com/LostTechSoftware/bk_clientes/pulls) for a list of proposed features (and known issues).
+See the [PRs](https://github.com/LostTechSoftware/bk_moderation/pulls) for a list of proposed features (and known issues).
 
 <!-- CONTRIBUTING -->
 
-## License
+## 📄 License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
