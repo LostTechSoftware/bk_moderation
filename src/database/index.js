@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { sendLogInfo } = require("../logs/coralogix");
 
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
@@ -8,10 +9,11 @@ mongoose.connect(process.env.MONGO_URL, {
 });
 mongoose.Promise = global.Promise;
 
-console.log(
-  `Banco de dados conectado: ${
+sendLogInfo({
+  data: `Banco de dados conectado: ${
     process.env.NODE_ENV === "production" ? "Produção" : "Staging"
-  }`
-);
+  }`,
+  name: "INFO",
+});
 
 module.exports = mongoose;

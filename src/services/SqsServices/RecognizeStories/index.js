@@ -101,4 +101,4 @@ async function RecognizeStories(datas) {
   }
 }
 
-module.exports = { RecognizeStories };
+module.exports = RecognizeStories;
