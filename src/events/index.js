@@ -42,8 +42,6 @@ function CreateConsumers() {
           sendLogInfo({ data: `Message Deleted ${data}`, name: "INFO" });
         }
       });
-
-      return;
     },
   });
 
