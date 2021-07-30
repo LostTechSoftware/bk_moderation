@@ -47,7 +47,7 @@ async function RecognizeStories(datas) {
         const reasons = [];
         if (data.ModerationLabels.length) {
           for (const { Name } of data.ModerationLabels) {
-            reasons.push(reasonsTranslated[Name] || "");
+            if (reasonsTranslated[Name]) reasons.push(reasonsTranslated[Name]);
           }
 
           const story = await Story.findById(dataQeue.storyId);
