@@ -65,11 +65,12 @@ async function RecognizeStories(datas) {
             text: "FoodZilla",
             html: RejectStory({ image: dataQeue.image, reasons }),
           };
-          sgMail
-            .send(msg)
-            .catch((error) =>
-              console.error(`Error in send email${error.response.body}`)
-            );
+          sgMail.send(msg).catch((error) =>
+            sendLogError({
+              data: `Error in send email${error.response.body}`,
+              name: "EMAIL_ERROR",
+            })
+          );
         } else {
           const msg = {
             to: dataQeue.email,
@@ -78,11 +79,12 @@ async function RecognizeStories(datas) {
             text: "FoodZilla",
             html: ApproveStory({ image: dataQeue.image }),
           };
-          sgMail
-            .send(msg)
-            .catch((error) =>
-              console.error(`Error in send email${error.response.body}`)
-            );
+          sgMail.send(msg).catch((error) =>
+            sendLogError({
+              data: `Error in send email${error.response.body}`,
+              name: "EMAIL_ERROR",
+            })
+          );
 
           const story = await Story.findById(dataQeue.storyId);
 
@@ -101,4 +103,4 @@ async function RecognizeStories(datas) {
   }
 }
 
-module.exports = { RecognizeStories };
+module.exports = RecognizeStories;
