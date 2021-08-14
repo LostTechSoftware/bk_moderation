@@ -66,6 +66,8 @@ app.use(Sentry.Handlers.errorHandler());
 
 app.use(Sentry.Handlers.tracingHandler());
 
+require("./routes")(app);
+
 require("./logs/coralogix");
 CreateConsumers();
 
