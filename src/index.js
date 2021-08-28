@@ -8,7 +8,9 @@ const rateLimit = require("express-rate-limit");
 const Sentry = require("@sentry/node");
 const Tracing = require("@sentry/tracing");
 const helmet = require("helmet");
-const { sendLogInfo } = require("./logs/coralogix");
+const logs = require("./logs");
+const CreateConsumers = require("./events");
+const httpContext = require("express-http-context");
 
 const app = express();
 
@@ -65,13 +67,10 @@ app.use(Sentry.Handlers.errorHandler());
 
 app.use(Sentry.Handlers.tracingHandler());
 
-require("./logs/coralogix");
-require("./events");
+app.use(httpContext.middleware);
 
-console.log(`Now running in PORT: ${process.env.PORT || 3002}`);
-sendLogInfo({
-  data: `Now running in PORT: ${process.env.PORT || 3002}`,
-  name: "INFO",
-});
+CreateConsumers();
+
+logs.info(`Now running in PORT: ${process.env.PORT || 3002}`);
 
 server.listen(process.env.PORT || 3002);
