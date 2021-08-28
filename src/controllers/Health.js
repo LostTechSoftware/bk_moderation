@@ -1,4 +1,4 @@
-const { sendLogError } = require("../logs/coralogix");
+const logs = require("../logs");
 const Story = require("../models/story");
 
 async function Health(req, res) {
@@ -7,7 +7,7 @@ async function Health(req, res) {
 
     return res.status(200).json("Okay");
   } catch (error) {
-    sendLogError({ name: "Health", data: error });
+    logs.error(error);
 
     return res.status(400).json("Error");
   }

@@ -1,7 +1,7 @@
 const sgMail = require("@sendgrid/mail");
 const AWS = require("aws-sdk");
 const Story = require("../../../models/story");
-const { sendLogError, sendLogInfo } = require("../../../logs/coralogix");
+const logs = require("../../../logs");
 const { RejectStory, ApproveStory } = require("../../../templates");
 
 AWS.config.update({ region: "us-east-2" });
@@ -40,8 +40,7 @@ async function RecognizeStories(datas) {
         sendLogError({ data: err, name: "QUEUE_STORY_ERRR" });
         return console.log({ data: err, name: "QUEUE_STORY_ERRR" });
       }
-      console.log({ data, name: "SUCCESSFULL_STORY_ANALISIED" });
-      sendLogInfo({ data, name: "SUCCESSFULL_STORY_ANALISIED" });
+      logs.info("SUCCESSFULL_STORY_ANALISIED");
 
       try {
         const reasons = [];
@@ -65,12 +64,11 @@ async function RecognizeStories(datas) {
             text: "FoodZilla",
             html: RejectStory({ image: dataQeue.image, reasons }),
           };
-          sgMail.send(msg).catch((error) =>
-            sendLogError({
-              data: `Error in send email${error.response.body}`,
-              name: "EMAIL_ERROR",
-            })
-          );
+          sgMail
+            .send(msg)
+            .catch((error) =>
+              logs.error(`Error in send email${error.response.body}`)
+            );
         } else {
           const msg = {
             to: dataQeue.email,
@@ -79,12 +77,11 @@ async function RecognizeStories(datas) {
             text: "FoodZilla",
             html: ApproveStory({ image: dataQeue.image }),
           };
-          sgMail.send(msg).catch((error) =>
-            sendLogError({
-              data: `Error in send email${error.response.body}`,
-              name: "EMAIL_ERROR",
-            })
-          );
+          sgMail
+            .send(msg)
+            .catch((error) =>
+              logs.error(`Error in send email ${error.response.body}`)
+            );
 
           const story = await Story.findById(dataQeue.storyId);
 
