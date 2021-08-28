@@ -69,6 +69,9 @@ app.use(Sentry.Handlers.tracingHandler());
 
 app.use(httpContext.middleware);
 
+require("./middlewares/logs")(app);
+require("./routes")(app);
+
 CreateConsumers();
 
 logs.info(`Now running in PORT: ${process.env.PORT || 3002}`);

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const logs = require("../logs");
 
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
@@ -8,7 +9,7 @@ mongoose.connect(process.env.MONGO_URL, {
 });
 mongoose.Promise = global.Promise;
 
-console.log(
+logs.info(
   `Banco de dados conectado: ${
     process.env.NODE_ENV === "production" ? "Produção" : "Staging"
   }`
