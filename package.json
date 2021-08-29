@@ -35,7 +35,7 @@
     }
   },
   "dependencies": {
-    "@sendgrid/mail": "7.2.2",
+    "@sendgrid/mail": "7.4.5",
     "@sentry/node": "6.2.1",
     "@sentry/tracing": "6.2.5",
     "algorithmia": "0.3.10",
@@ -46,6 +46,7 @@
     "cors": "2.8.5",
     "dotenv": "10.0.0",
     "express": "4.17.1",
+    "express-http-context": "1.2.4",
     "express-rate-limit": "5.2.6",
     "helmet": "4.6.0",
     "js-logger": "1.6.1",
