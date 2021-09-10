@@ -62,7 +62,14 @@ async function RecognizeStories(datas) {
             from: process.env.EMAIL,
             subject: `FoodZilla Seu Story foi Rejeitado`,
             text: "FoodZilla",
-            html: RejectStory({ image: dataQeue.image, reasons }),
+            html: RejectStory({
+              image:
+                dataQeue.image.replace(
+                  "s3.us-east-2.amazonaws.com",
+                  "imgix.net"
+                ) + "?blur=100",
+              reasons,
+            }),
           };
           sgMail
             .send(msg)
