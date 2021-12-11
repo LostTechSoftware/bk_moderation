@@ -47,7 +47,7 @@
     "dotenv": "10.0.0",
     "express": "4.17.1",
     "express-http-context": "1.2.4",
-    "express-rate-limit": "5.2.6",
+    "express-rate-limit": "5.5.1",
     "helmet": "4.6.0",
     "js-logger": "1.6.1",
     "mongoose": "5.12.14",
