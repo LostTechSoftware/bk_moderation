@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@sendgrid/mail": "7.4.5",
-    "@sentry/node": "6.2.1",
+    "@sentry/node": "6.17.2",
     "@sentry/tracing": "6.2.5",
     "algorithmia": "0.3.10",
     "aws-sdk": "2.860.0",
