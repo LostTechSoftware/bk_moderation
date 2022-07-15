@@ -52,7 +52,7 @@
     "js-logger": "1.6.1",
     "mongoose": "5.12.14",
     "node-cron": "3.0.0",
-    "nodemon": "2.0.7",
+    "nodemon": "2.0.18",
     "sqs-consumer": "5.5.0"
   },
   "devDependencies": {
