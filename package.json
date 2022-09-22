@@ -35,7 +35,7 @@
     }
   },
   "dependencies": {
-    "@sendgrid/mail": "7.4.5",
+    "@sendgrid/mail": "7.7.0",
     "@sentry/node": "6.2.1",
     "@sentry/tracing": "6.2.5",
     "algorithmia": "0.3.10",
