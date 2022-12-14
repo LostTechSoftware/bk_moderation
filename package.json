@@ -45,7 +45,7 @@
     "coralogix-logger": "1.1.28",
     "cors": "2.8.5",
     "dotenv": "10.0.0",
-    "express": "4.17.1",
+    "express": "4.17.3",
     "express-http-context": "1.2.4",
     "express-rate-limit": "5.2.6",
     "helmet": "4.6.0",
